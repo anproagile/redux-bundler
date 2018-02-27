@@ -110,8 +110,8 @@ This is another one of the chief complaints people have with redux. They eventua
 Let's take a step back. Many developers, if using react will use component life-cycle methods like `componentDidMount` to trigger data fetches required by that component. But this sucks for many reasons:
 
 1. You've coupled data fetching arbitrarily to a component, what if another component needs the same data but it hasn't been fetched yet?
-2. What if the component, due to user actions gets removed and immediately added back because the user clicked "back"?
-3. What if you know ahead of time that data is _going_ to be needed by the application, even if it isn't needed yet?
+2. What is the component, due to user actions gets removed and immediately added back because the user clicked "back".
+3. What if know ahead of time that data is _going_ to be needed by the application, even if it isn't needed yet?
 4. What if it fails and we want to retry a couple of times before we show a "failed" message to the user?
 5. What if you want to show the data you already have, while fetching updated data in the background?
 
@@ -265,6 +265,7 @@ None of which are added by default, but many of which you'll likely want.
 
 ## changelog
 
+* `17.1.1` - Fix bug where `requestAnimationFrame` was expected to exist when running inside a worker.
 * `17.1.0` - Export `*` from redux in index.
 * `17.0.1` - Fix to ensure publishing/mapping to correct build files :facepalm:.
 * `17.0.0` - Switched to build with microbundle. Should address issues #5, #8. No longer pulling in redux-bundler version into build.
