@@ -1,16 +1,11 @@
 import namedActionMiddleware from '../middleware/named-action'
 import thunkMiddleware from '../middleware/custom-thunk'
 import customApplyMiddleware from '../middleware/custom-apply-middleware'
-import {
-  bindActionCreators,
-  combineReducers,
-  compose,
-  createStore
-} from 'redux'
+import { createStore, combineReducers, bindActionCreators } from 'redux'
 import { resolveSelectors } from 'create-selector'
 import { createChunk } from './consume-bundle'
 import addBindingMethods from './add-binding-methods'
-import { HAS_WINDOW, IS_PROD, selectorNameToValueName } from '../utils'
+import { selectorNameToValueName } from '../utils'
 
 const bindSelectorsToStore = (store, selectors) => {
   for (const key in selectors) {
@@ -74,11 +69,6 @@ const enableBatchDispatch = reducer => (state, action) => {
   return reducer(state, action)
 }
 
-const devTools = () =>
-  !IS_PROD && HAS_WINDOW && window.__REDUX_DEVTOOLS_EXTENSION__
-    ? window.__REDUX_DEVTOOLS_EXTENSION__()
-    : null
-
 const composeBundles = (...bundles) => {
   // build out object of extracted bundle info
   const firstChunk = createChunk(bundles)
@@ -88,15 +78,12 @@ const composeBundles = (...bundles) => {
     const store = createStore(
       enableBatchDispatch(combineReducers(firstChunk.reducers)),
       data,
-      compose(
-        customApplyMiddleware(
-          ...[
-            namedActionMiddleware,
-            thunkMiddleware(firstChunk.extraArgCreators),
-            ...firstChunk.middlewareCreators.map(fn => fn(firstChunk))
-          ]
-        ),
-        devTools()
+      customApplyMiddleware(
+        ...[
+          namedActionMiddleware,
+          thunkMiddleware(firstChunk.extraArgCreators),
+          ...firstChunk.middlewareCreators.map(fn => fn(firstChunk))
+        ]
       )
     )
 
